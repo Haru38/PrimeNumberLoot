@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PrimeNumber is ERC721Enumerable, ReentrancyGuard, Ownable {
     mapping(uint256 => bool) private primeNumberBool;
-    uint256 max_num = 150;
+    uint256 max_num = 100;
 
     constructor() ERC721("PrimeNumberLoot", "PrimeNumberLoot") Ownable() {
         for (uint256 i = 0; i <= max_num; i++) {

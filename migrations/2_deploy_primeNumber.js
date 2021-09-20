@@ -1,4 +1,4 @@
-const PrimeNumberContract = artifacts.require("PrimeNumber");
+const PrimeNumberContract = artifacts.require("PrimeNumberLoot");
 
 module.exports = function (deployer) {
   deployer.deploy(PrimeNumberContract);

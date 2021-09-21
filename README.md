@@ -8,8 +8,7 @@ The issued svg image can be viewed on open sea, etc.
 
 ## PrimeNunberLoot.sol
 Deployed Contracts
-### Constructor.
-Perform prime number generation when deployed. Use "Eratosthenes' sieve".
+The Miller-Rabin test is used to determine prime numbers.
 
 ### method : claim
 tokenID : Matches a prime number. (That is, not the number of 1~primes, but the prime number itself is the tokenID.)
@@ -17,6 +16,10 @@ tokenID : Matches a prime number. (That is, not the number of 1~primes, but the 
 ### method : tokenURI
 Code to create SVG of minted prime numbers.
 
+
 ## PN_origin.sol
-A method to check the result of prime number generation and the number of prime numbers added for testing. This function is not added to the contract for deployment because it is not actually used.
+### Constructor.
+Perform prime number generation when deployed. Use "Eratosthenes' sieve".
+
+
 

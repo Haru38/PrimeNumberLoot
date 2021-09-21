@@ -1,7 +1,8 @@
 # PrimeNumberLoot
 [Etherscan page](https://etherscan.io/address/0x896fdEfD39a41d29C01E0bb2dC1A21529B81f42b#code)
+
 created by 2021-09
-## descriptrion
+## Descriptrion
 
 This is a smart contract that issues prime numbers as NFTs.
 It supports prime numbers up to 100000, and issues a svg with a different background color and font depending on the number of digits of the prime number.

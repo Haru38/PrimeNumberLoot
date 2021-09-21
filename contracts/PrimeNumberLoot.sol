@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 /// [MIT License]
 /// @title Base64
@@ -79,25 +79,27 @@ library Base64 {
 }
 
 contract PrimeNumberLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
-    mapping(uint256 => bool) private primeNumberBool;
-    uint256 max_num = 10;
+    using SafeMath for uint256;
+    uint256 max_num = 100000;
 
-    constructor() ERC721("PrimeNumberLoot", "PrimeNumberLoot") Ownable() {
-        for (uint256 i = 0; i < max_num + 1; i++) {
-            primeNumberBool[i] = true;
-        }
-        primeNumberBool[0] = false;
-        primeNumberBool[1] = false;
-        for (uint256 i = 2;i < max_num+1;i++){
-            if(primeNumberBool[i] == true){
-                for (uint256 j = 2*i;j < max_num + 1;j = j+i){
-                    primeNumberBool[j] = false;
-                }
+    constructor() ERC721("PrimeNumberLoot", "PrimeNumberLoot") Ownable() {}
+
+    function allPrime(uint256 first,uint256 second) public pure returns(uint256[] memory primes){
+        primes = new uint256[]((second-first)/2);
+        uint256 index = 0;
+        for(uint256 i = first;i < second+1;i++){
+            bool result = probablyPrime(i,2);
+            if (result == true){
+                primes[index] = i;
+                index++;
             }
         }
-        primeNumberBool[57] = true;
+        return primes;
     }
 
+    function changeLimit(uint256 limit) external onlyOwner{
+        max_num = limit;
+    }
 
     //prime number or not
     function isPrime(uint256 query) internal view returns (bool) {
@@ -105,8 +107,9 @@ contract PrimeNumberLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
             query <= max_num && query >= 0,
             "That number is not supported."
         );
-        return primeNumberBool[query];
+        return probablyPrime(query,2);
     }
+
 
     function claim(uint256 primeNumber) public nonReentrant {
         require(isPrime(primeNumber), "It's not a prime number.");
@@ -116,12 +119,12 @@ contract PrimeNumberLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
 
     function tokenURI(uint256 primeNumber)
         public
-        pure
+        view
         override
         returns (string memory)
     {
-        string[3] memory colors = ["#78FF94","#77EEFF","#DBFF71"];
-        string[3] memory fontSizes = ["50","45","40"];
+        string[5] memory colors = ["#78FF94","#77EEFF","#DBFF71","#FF00CC","#999900"];
+        string[5] memory fontSizes = ["50","45","40","40","35"];
 
         string memory strPrimeNumber = toString(primeNumber);
         uint256 lenPrimeNumber = bytes(strPrimeNumber).length;
@@ -160,9 +163,11 @@ contract PrimeNumberLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "prime Number #',
+                        '{"name": "Prime Number #',
                         toString(primeNumber),
-                        '", "description": "PrimeNUmberLoot is an NFT for prime numbers up to 1000. The background color and font changes depending on the number of digits in the prime number.", "image": "data:image/svg+xml;base64,',
+                        '", "description": "PrimeNumberLoot is an NFT for prime numbers up to ',
+                        toString(max_num),
+                        '. The background color and font changes depending on the number of digits in the prime number.", "image": "data:image/svg+xml;base64,',
                         Base64.encode(bytes(output)),
                         '"}'
                     )
@@ -175,6 +180,76 @@ contract PrimeNumberLoot is ERC721Enumerable, ReentrancyGuard, Ownable {
         );
         return output;
     }
+
+
+    function probablyPrime(uint256 n, uint256 prime) public pure returns (bool) {
+        // miller rabin
+        // copied from https://gist.github.com/lhartikk/c7bbc120aa8e58a0e0e781edb9a90497
+        if (n == 2 || n == 3 || n == 57) {
+            return true;
+        }
+
+        if (n % 2 == 0 || n < 2) {
+            return false;
+        }
+
+        uint256[2] memory values = getValues(n);
+        uint256 s = values[0];
+        uint256 d = values[1];
+
+        uint256 x = fastModularExponentiation(prime, d, n);
+
+        if (x == 1 || x == n - 1) {
+            return true;
+        }
+
+        for (uint256 i = s - 1; i > 0; i--) {
+            x = fastModularExponentiation(x, 2, n);
+            if (x == 1) {
+                return false;
+            }
+            if (x == n - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    function fastModularExponentiation(uint256 a, uint256 b, uint256 n) public pure returns (uint256) {
+        a = a % n;
+        uint256 result = 1;
+        uint256 x = a;
+
+        while(b > 0){
+            uint256 leastSignificantBit = b % 2;
+            b = b / 2;
+
+            if (leastSignificantBit == 1) {
+                result = result * x;
+                result = result % n;
+            }
+            x = x.mul(x);
+            x = x % n;
+        }
+        return result;
+    }
+
+
+    // Write (n - 1) as 2^s * d
+    function getValues(uint256 n) public  pure returns (uint256[2] memory) {
+        uint256 s = 0;
+        uint256 d = n - 1;
+        while (d % 2 == 0) {
+            d = d / 2;
+            s++;
+        }
+        uint256[2] memory ret;
+        ret[0] = s;
+        ret[1] = d;
+        return ret;
+    }
+
 
     function toString(uint256 value) internal pure returns (string memory) {
         // Inspired by OraclizeAPI's implementation - MIT license

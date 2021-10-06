@@ -24,8 +24,9 @@ Code to create SVG of minted prime numbers.
 
 
 ## PN_origin.sol
-### Constructor.
-Perform prime number generation when deployed. Use "Eratosthenes' sieve".This one is not realistic because it costs about 10 times more gas to deploy than PrimeNumberLoot.sol. Therefore, this one was just created, and the one actually deployed will be PrimeNumberLoot.sol.
+This one is not realistic because it costs about 10 times more gas to deploy than PrimeNumberLoot.sol. Therefore, this one was just created, and the one actually deployed will be PrimeNumberLoot.sol.
 
+### Constructor.
+Perform prime number generation when deployed. Use "Eratosthenes' sieve".
 
 

@@ -8,6 +8,10 @@ This is a smart contract that issues prime numbers as NFTs.
 It supports prime numbers up to 100000, and issues a svg with a different background color and font depending on the number of digits of the prime number.
 The issued svg image can be viewed on [opensea](https://opensea.io/collection/primenumberloot), etc.
 
+## How to get the PrimeNumberLoot
+
+![IMG_E1315374901D-1](https://user-images.githubusercontent.com/67744833/136139573-a013e85d-b8a6-4af6-99b0-8cb5256f99da.jpeg)
+
 ## PrimeNunberLoot.sol
 Deployed Contracts
 The Miller-Rabin test is used to determine prime numbers.

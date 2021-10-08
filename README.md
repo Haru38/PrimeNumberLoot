@@ -12,7 +12,7 @@ The issued svg image can be viewed on [opensea](https://opensea.io/collection/pr
 
 ![IMG_E1315374901D-1](https://user-images.githubusercontent.com/67744833/136139573-a013e85d-b8a6-4af6-99b0-8cb5256f99da.jpeg)
 
-## PrimeNunberLoot.sol
+## PrimeNumberLoot.sol
 Deployed Contracts
 The Miller-Rabin test is used to determine prime numbers.
 

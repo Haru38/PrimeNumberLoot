@@ -1,4 +1,4 @@
-build/
-node_modules/
-package.json/
-truffle-config.js
+./build/
+./node_modules/
+./package.json/
+./truffle-config.js
